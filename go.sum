@@ -213,8 +213,8 @@ github.com/sercand/kuberesolver/v5 v5.1.1/go.mod h1:Fs1KbKhVRnB2aDWN12NjKCB+RgYM
 github.com/sergi/go-diff v1.3.1 h1:xkr+Oxo4BOQKmkn/B9eMK0g5Kg/983T9DqqPHwYqD+8=
 github.com/sergi/go-diff v1.3.1/go.mod h1:aMJSSKb2lpPvRNec0+w3fl7LP9IOFzdc9Pa4NFbPK1I=
 github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6MwdIuYE2rE=
-github.com/sloper-ai/bb-storage v0.0.0-20260929093739-42d5a2d0fb7a h1:TMQXxgaFl2NseEWHFwyQbXAXr/WI4KA5+Ay3mfR4gHc=
-github.com/sloper-ai/bb-storage v0.0.0-20260929093739-42d5a2d0fb7a/go.mod h1:/ZFOdYOnkvFBBocveCsp/bmdIq9fFXfc76SgXkqj1uc=
+github.com/sloper-ai/bb-storage v0.0.0-20260929151002-f9e0c50f14f7 h1:5x1xfXgx3i7XxPPRRI++u0b5f0n+4GoC7SaLYBcvyBM=
+github.com/sloper-ai/bb-storage v0.0.0-20260929151002-f9e0c50f14f7/go.mod h1:/ZFOdYOnkvFBBocveCsp/bmdIq9fFXfc76SgXkqj1uc=
 github.com/spf13/pflag v1.0.10 h1:4EBh2KAYBwaONj6b2Ye1GiHfwjqyROoF4RwYO+vPwFk=
 github.com/spf13/pflag v1.0.10/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An2Bg=
 github.com/spiffe/go-spiffe/v2 v2.6.0 h1:l+DolpxNWYgruGQVV0xsfeya3CsC7m8iBzDnMpsbLuo=
