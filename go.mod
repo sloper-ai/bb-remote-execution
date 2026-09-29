@@ -3,7 +3,7 @@ module github.com/buildbarn/bb-remote-execution
 go 1.27.1
 
 // Sloper carries its filesystem fixes in this fork.
-replace github.com/buildbarn/bb-storage => github.com/sloper-ai/bb-storage v0.0.0-20260929034721-4d7c744dc83b
+replace github.com/buildbarn/bb-storage => github.com/sloper-ai/bb-storage v0.0.0-20260929090925-819e08a9e167
 
 // rules_go doesn't support gomock's package mode.
 replace go.uber.org/mock => go.uber.org/mock v0.4.0
