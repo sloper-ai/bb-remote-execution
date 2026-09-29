@@ -193,7 +193,7 @@ func TestLocalBuildExecutorInputRootPopulationFailed(t *testing.T) {
 	filePool := mock.NewMockFilePool(ctrl)
 	monitor := mock.NewMockUnreadDirectoryMonitor(ctrl)
 	buildDirectory.EXPECT().InstallHooks(filePool, gomock.Any())
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777)|os.ModeSticky)
 	inputRootDirectory := mock.NewMockBuildDirectory(ctrl)
 	buildDirectory.EXPECT().EnterBuildDirectory(path.MustNewComponent("root")).Return(inputRootDirectory, nil)
 	inputRootDirectory.EXPECT().MergeDirectoryContents(
@@ -270,7 +270,7 @@ func TestLocalBuildExecutorOutputDirectoryCreationFailure(t *testing.T) {
 	filePool := mock.NewMockFilePool(ctrl)
 	monitor := mock.NewMockUnreadDirectoryMonitor(ctrl)
 	buildDirectory.EXPECT().InstallHooks(filePool, gomock.Any())
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777)|os.ModeSticky)
 	inputRootDirectory := mock.NewMockBuildDirectory(ctrl)
 	buildDirectory.EXPECT().EnterBuildDirectory(path.MustNewComponent("root")).Return(inputRootDirectory, nil)
 	inputRootDirectory.EXPECT().MergeDirectoryContents(
@@ -342,7 +342,7 @@ func TestLocalBuildExecutorMissingCommand(t *testing.T) {
 	filePool := mock.NewMockFilePool(ctrl)
 	monitor := mock.NewMockUnreadDirectoryMonitor(ctrl)
 	buildDirectory.EXPECT().InstallHooks(filePool, gomock.Any())
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777)|os.ModeSticky)
 	inputRootDirectory := mock.NewMockBuildDirectory(ctrl)
 	buildDirectory.EXPECT().EnterBuildDirectory(path.MustNewComponent("root")).Return(inputRootDirectory, nil)
 	inputRootDirectory.EXPECT().MergeDirectoryContents(
@@ -441,7 +441,7 @@ func TestLocalBuildExecutorOutputSymlinkReadingFailure(t *testing.T) {
 	filePool := mock.NewMockFilePool(ctrl)
 	monitor := mock.NewMockUnreadDirectoryMonitor(ctrl)
 	buildDirectory.EXPECT().InstallHooks(filePool, gomock.Any())
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777)|os.ModeSticky)
 	inputRootDirectory := mock.NewMockBuildDirectory(ctrl)
 	buildDirectory.EXPECT().EnterBuildDirectory(path.MustNewComponent("root")).Return(inputRootDirectory, nil)
 	inputRootDirectory.EXPECT().MergeDirectoryContents(
@@ -450,7 +450,7 @@ func TestLocalBuildExecutorOutputSymlinkReadingFailure(t *testing.T) {
 		digest.MustNewDigest("nintendo64", remoteexecution.DigestFunction_SHA256, "7777777777777777777777777777777777777777777777777777777777777777", 42),
 		monitor,
 	).Return(nil)
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("tmp"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("tmp"), os.FileMode(0o777)|os.ModeSticky)
 	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("server_logs"), os.FileMode(0o777))
 	runner := mock.NewMockRunnerClient(ctrl)
 	runner.EXPECT().Run(gomock.Any(), &runner_pb.RunRequest{
@@ -658,7 +658,7 @@ func TestLocalBuildExecutorSuccess(t *testing.T) {
 	filePool := mock.NewMockFilePool(ctrl)
 	monitor := mock.NewMockUnreadDirectoryMonitor(ctrl)
 	buildDirectory.EXPECT().InstallHooks(filePool, gomock.Any())
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777)|os.ModeSticky)
 	buildDirectory.EXPECT().EnterBuildDirectory(path.MustNewComponent("root")).Return(inputRootDirectory, nil)
 	inputRootDirectory.EXPECT().MergeDirectoryContents(
 		ctx,
@@ -675,7 +675,7 @@ func TestLocalBuildExecutorSuccess(t *testing.T) {
 		filesystem.NewDeviceNumberFromMajorMinor(1, 3),
 	)
 	inputRootDevDirectory.EXPECT().Close()
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("tmp"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("tmp"), os.FileMode(0o777)|os.ModeSticky)
 	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("server_logs"), os.FileMode(0o777))
 	resourceUsage, err := anypb.New(&emptypb.Empty{})
 	require.NoError(t, err)
@@ -886,7 +886,7 @@ func TestLocalBuildExecutorInputRootIOFailureDuringExecution(t *testing.T) {
 	// Input root creation. Preserve the error logger that is
 	// provided, so that an I/O error can be triggered during the
 	// build.
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777)|os.ModeSticky)
 	inputRootDirectory := mock.NewMockBuildDirectory(ctrl)
 	buildDirectory.EXPECT().EnterBuildDirectory(path.MustNewComponent("root")).Return(inputRootDirectory, nil)
 	var errorLogger util.ErrorLogger
@@ -899,7 +899,7 @@ func TestLocalBuildExecutorInputRootIOFailureDuringExecution(t *testing.T) {
 		errorLogger = providedErrorLogger
 		return nil
 	})
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("tmp"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("tmp"), os.FileMode(0o777)|os.ModeSticky)
 	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("server_logs"), os.FileMode(0o777))
 
 	// Let an I/O error in the input root trigger during the build.
@@ -1020,7 +1020,7 @@ func TestLocalBuildExecutorTimeoutDuringExecution(t *testing.T) {
 	buildDirectory.EXPECT().InstallHooks(filePool, gomock.Any())
 
 	// Input root creation.
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777)|os.ModeSticky)
 	inputRootDirectory := mock.NewMockBuildDirectory(ctrl)
 	buildDirectory.EXPECT().EnterBuildDirectory(path.MustNewComponent("root")).Return(inputRootDirectory, nil)
 	inputRootDirectory.EXPECT().MergeDirectoryContents(
@@ -1029,7 +1029,7 @@ func TestLocalBuildExecutorTimeoutDuringExecution(t *testing.T) {
 		digest.MustNewDigest("ubuntu1804", remoteexecution.DigestFunction_SHA256, "0000000000000000000000000000000000000000000000000000000000000003", 345),
 		monitor,
 	).Return(nil)
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("tmp"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("tmp"), os.FileMode(0o777)|os.ModeSticky)
 	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("server_logs"), os.FileMode(0o777))
 
 	// Simulate a timeout by running the command with a timeout of
@@ -1149,7 +1149,7 @@ func TestLocalBuildExecutorCharacterDeviceNodeCreationFailed(t *testing.T) {
 	buildDirectory.EXPECT().InstallHooks(filePool, gomock.Any())
 
 	// Input root creation.
-	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777))
+	buildDirectory.EXPECT().Mkdir(path.MustNewComponent("root"), os.FileMode(0o777)|os.ModeSticky)
 	inputRootDirectory := mock.NewMockBuildDirectory(ctrl)
 	buildDirectory.EXPECT().EnterBuildDirectory(path.MustNewComponent("root")).Return(inputRootDirectory, nil)
 	inputRootDirectory.EXPECT().MergeDirectoryContents(

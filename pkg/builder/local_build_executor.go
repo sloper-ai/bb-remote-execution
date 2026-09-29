@@ -187,8 +187,9 @@ func (be *localBuildExecutor) Execute(ctx context.Context, filePool pool.FilePoo
 		},
 	}
 
-	// Create input root directory inside of build directory.
-	if err := buildDirectory.Mkdir(inputRootDirectoryComponent, 0o777); err != nil {
+	// Bazel may place TEST_TMPDIR below this root. Protect worker-owned
+	// entries when an unprivileged action uses it for a nested launcher.
+	if err := buildDirectory.Mkdir(inputRootDirectoryComponent, 0o777|os.ModeSticky); err != nil {
 		attachErrorToExecuteResponse(
 			response,
 			util.StatusWrap(err, "Failed to create input root directory"),
@@ -251,8 +252,9 @@ func (be *localBuildExecutor) Execute(ctx context.Context, filePool pool.FilePoo
 	// actions may use to store temporary files. This ensures that
 	// temporary files are automatically removed when the build
 	// action completes. When using FUSE, it also causes quotas to
-	// be applied to them.
-	if err := buildDirectory.Mkdir(temporaryDirectoryComponent, 0o777); err != nil {
+	// be applied to them. The sticky bit protects entries when the worker
+	// and action run as different accounts.
+	if err := buildDirectory.Mkdir(temporaryDirectoryComponent, 0o777|os.ModeSticky); err != nil {
 		attachErrorToExecuteResponse(
 			response,
 			util.StatusWrap(err, "Failed to create temporary directory inside build directory"),

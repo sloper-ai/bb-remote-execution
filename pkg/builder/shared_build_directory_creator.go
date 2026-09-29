@@ -3,6 +3,7 @@ package builder
 import (
 	"context"
 	"log"
+	"os"
 	"strconv"
 	"sync/atomic"
 
@@ -73,7 +74,9 @@ func (dc *sharedBuildDirectoryCreator) GetBuildDirectory(ctx context.Context, ac
 	// Create the subdirectory.
 	childDirectoryName := path.MustNewComponent(name)
 	childDirectoryPath := parentDirectoryPath.Append(childDirectoryName)
-	if err := parentDirectory.Mkdir(childDirectoryName, 0o777); err != nil {
+	// The worker may own this ancestor of an unprivileged action's TMPDIR.
+	// Protect its entries while keeping it writable by the action account.
+	if err := parentDirectory.Mkdir(childDirectoryName, 0o777|os.ModeSticky); err != nil {
 		parentDirectory.Close()
 		return nil, nil, util.StatusWrapfWithCode(err, codes.Internal, "Failed to create build directory %#v", childDirectoryPath.GetUNIXString())
 	}
